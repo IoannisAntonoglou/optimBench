@@ -3,6 +3,7 @@
 
 require 'torch'
 require 'optim'
+require 'optimx'
 
 local algo = torch.class('optimbench.algo')
 
@@ -56,7 +57,7 @@ Returns:
  2. `fvalues` - a list of the corresponding f values
 --]]
 function algo:minimise(fun, xo, steps)
-	self.steps = steps or 1000
+	self.steps = steps or 100
 	self.error = nil
 	assert(xo ~= nil, 'Provide starting point !')
 

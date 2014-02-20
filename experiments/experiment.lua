@@ -29,6 +29,7 @@ function experiments_db:__init(opt)
 	self.algorithms_indexing = {}
 	self.noise_indexing = {}
 	self.scale_indexing = {}
+	self.non_stat_indexing = {}
 	self.repetitions = opt.repetitions or 10
 	self.steps = opt.steps or 100
 	self.referenceFun = '{quad_bowl|1|}_{gauss_add_normal|1|}_{normal|1|}_{None}_{normal}_{normal}'
@@ -71,16 +72,18 @@ function experiments_db:runExperiments(funs, algos)
 		self.functions_indexing[vf.name] = self.functions_indexing[vf.name] or {}
 		self.noise_indexing[vf.noisename] = self.noise_indexing[vf.noisename] or {}
 		self.scale_indexing[vf.scalename] = self.scale_indexing[vf.scalename] or {}
+		self.non_stat_indexing[vf.non_statname] = self.scale_indexing[vf.non_statname] or {}
 		self.functions_indexing[vf.name][kf] = true
 		self.noise_indexing[vf.noisename][kf] = true
 		self.scale_indexing[vf.scalename][kf] = true
+		self.non_stat_indexing[vf.non_statname][kf] = true
 
 		for ka, va in pairs(algos_list) do
 			self.experiments[ka] = self.experiments[ka] or {}
 			self.algorithms_indexing[va.name] = self.algorithms_indexing[va.name] or {}
 			self.algorithms_indexing[va.name][ka] = true
 
-			self.experiments[ka][kf] = optimx.benchmarking.experiment_entry(va, vf, self.repetitions, self.steps)
+			self.experiments[ka][kf] = optimbench.experiment_entry(va, vf, self.repetitions, self.steps)
 			i=i+1
 			print(ka, kf, i)
 			self.experiments[ka][kf]:run()
@@ -120,8 +123,9 @@ Parameters:
  * `filters_arg` - table of filters:
   - `fun`, a list of function names
   - `algo`, a list of algorithm names
-  - `noise`, a list of noise type
-  - `scale`, a list of scale type
+  - `noise`, a list of noise types
+  - `scale`, a list of scale types
+  - `non_stat`, a list of non stationarity types
   - `any valid algorithm parameter`
 
 Special care should be taken with function and algorithm names. For example if the function name is equal to 'abs' then all the different abs functions with different
@@ -162,7 +166,7 @@ function experiments_db:filter(filters_arg)
 		end
 	end
 
-	local processByOrder = {'algo', 'fun', 'noise', 'scale', 'rest'}
+	local processByOrder = {'algo', 'fun', 'noise', 'scale', 'non_stat', 'rest'}
 
 	for _, key in pairs(processByOrder) do
 		local newentries = {}
@@ -207,7 +211,7 @@ function experiments_db:filter(filters_arg)
 					end
 				end
 
-			elseif key == 'noise' or key == 'scale' then
+			elseif key == 'noise' or key == 'scale' or key == 'non_stat' then
 
 				local indexing = self[key..'_indexing']
 

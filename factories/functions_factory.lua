@@ -235,8 +235,6 @@ function factory_:scaleNonStationarity()
 
 	opt.fprime = self.opt.fprime:clone():cmul(scale)
 
-	print(opt.fprime)
-
 	local instance = optimbench.factory({
 		seed= self.seed,
 		name= self.name,
@@ -288,19 +286,40 @@ function factory_:noiseNonStationarity()
 	return
 end
 
+local function cloneFun(fun)
+	local f = table.copy(fun)
+	local mtfun = getmetatable(fun)
+	local mtf = table.copy(mtfun)
+	setmetatable(f, mtf)
+	return f
+end
+
 function factory_:offsetNonStationarity()
 	if self.non_stationarity_current_step < self.non_stationarity_steps then
 		self.non_stationarity_current_step = self.non_stationarity_current_step + 1
 		return
 	end
 
+	-- get the original function without any offset
+	self.original_fun = self.original_fun or cloneFun(self.fun)
+
+	-- generate offset 
 	local offset
 
 	if self.dim == 1 then
 		offset = torch.randn(1):mul(self.non_stationarity_scale)[1]
+		self.current_offset = self.current_offset or offset
 	else
 		offset = torch.randn(self.dim):mul(self.non_stationarity_scale)
+		self.current_offset = self.current_offset or offset:clone():zero()
 	end
+
+	offset = offset + self.current_offset
+
+	-- use the original function in order to avoid building depth in recursive calls
+	local mtfun = getmetatable(self.fun)
+	local mtorig_fun = getmetatable(self.original_fun)
+	mtfun.__call = mtorig_fun.__call
 
 	self:offset(offset)
 

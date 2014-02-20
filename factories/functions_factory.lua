@@ -2,16 +2,15 @@
 object's functions and the term function to refer to the function it implements.
 ]]--
 require 'torch'
---require 'torchExtensions'
 
-local proto_funs = optimBench.function_prototypes
-local proto_noise = optimBench.noise_prototypes
-local proto_multivariate = optimBench.multivariate_functions
-local proto_non_stationarity = optimBench.non_stationarity
-local integration = optimBench.noise_integration_prototypes
+local proto_funs = optimbench.function_prototypes
+local proto_noise = optimbench.noise_prototypes
+local proto_multivariate = optimbench.multivariate_functions
+local proto_non_stationarity = optimbench.non_stationarity
+local integration = optimbench.noise_integration_prototypes
 
 
-local factory_ = torch.class('optimBench.factory')
+local factory_ = torch.class('optimbench.factory')
 
 
 --[[ The constructor of the factory class
@@ -101,17 +100,11 @@ function factory_:__init(opt)
 		fun = myFuns[1]
 	end
 
-	local non_stationarity = opt.non_stationarity
-
-	if non_stationarity then
-		fun = non_stationarity.moving_target(fun, opt)
-	end
-
-	local gTensor = torch.Tensor(1)
+	-- Set possible non stationarity
+	self:nonStationaritySet(opt.non_stat)
 
 	local ff = nil
 	local gg = torch.Tensor(dim)
-
 
 	local wfun
 
@@ -205,6 +198,116 @@ function factory_:curl(scale)
 
 end
 
+function factory_:nonStationaritySet(opt)
+	self.non_statname = opt.name or 'normal'
+	if self.non_statname == 'normal' or ((self.noiseless or (self.noisename:find('maskout'))) and self.non_statname == 'noise') then
+		self.non_stationarity = function() return end
+		return
+	end
+
+	self.non_stationarity_steps = opt.steps or 10
+	self.non_stationarity_scale = opt.scale or 0.1
+	self.non_stationarity_current_step = 0
+
+	if self.non_statname == 'scale' then
+		self.non_stationarity = self.scaleNonStationarity
+	elseif self.non_statname == 'noise' then
+		self.non_stationarity = self.noiseNonStationarity
+	elseif self.non_statname == 'offset' then
+		self.non_stationarity = self.offsetNonStationarity
+	else
+		error('Undefined type of non stationarity', self.non_statname)
+	end
+	return
+end
+
+function factory_:scaleNonStationarity()
+
+	if self.non_stationarity_current_step < self.non_stationarity_steps then
+		self.non_stationarity_current_step = self.non_stationarity_current_step + 1
+		return
+	end
+
+	local opt = {}
+	for k, v in pairs(self.opt) do opt[k] = self.opt[k] end
+
+	local scale = torch.randn(self.opt.fprime:size()):mul(self.non_stationarity_scale):exp()
+
+	opt.fprime = self.opt.fprime:clone():cmul(scale)
+
+	print(opt.fprime)
+
+	local instance = optimbench.factory({
+		seed= self.seed,
+		name= self.name,
+		noisename= self.noisename,
+		scalename= self.scalename,
+		funs= self.funs,
+		noise= self.noise,
+		ascend= self.ascend,
+		norm= self.norm,
+		non_stat= {'normal'},
+		opt = opt
+	})
+
+	self.fun = instance.fun
+	self.non_stationarity_current_step = 0
+	instance = nil
+	return
+end
+
+function factory_:noiseNonStationarity()
+	if self.non_stationarity_current_step < self.non_stationarity_steps then
+		self.non_stationarity_current_step = self.non_stationarity_current_step + 1
+		return
+	end
+
+	local noise = table.copy(self.noise)
+	local scale = torch.randn(#noise):mul(self.non_stationarity_scale):exp()
+
+	for k, v in pairs(noise) do
+		v[2] = v[2] * scale[k]
+	end
+
+	local instance = optimbench.factory({
+		seed= self.seed,
+		name= self.name,
+		noisename= self.noisename,
+		scalename= self.scalename,
+		funs= self.funs,
+		noise= noise,
+		ascend= self.ascend,
+		norm= self.norm,
+		non_stat= {'normal'},
+		opt = self.opt
+	})
+
+	self.fun = instance.fun
+	self.non_stationarity_current_step = 0
+	instance = nil
+	return
+end
+
+function factory_:offsetNonStationarity()
+	if self.non_stationarity_current_step < self.non_stationarity_steps then
+		self.non_stationarity_current_step = self.non_stationarity_current_step + 1
+		return
+	end
+
+	local offset
+
+	if self.dim == 1 then
+		offset = torch.randn(1):mul(self.non_stationarity_scale)[1]
+	else
+		offset = torch.randn(self.dim):mul(self.non_stationarity_scale)
+	end
+
+	self:offset(offset)
+
+	self.non_stationarity_current_step = 0
+end
+
+
 --[[ This routine generated a hash key descriptor for the function. This descriptor is the concatenation of the function name, the noise name and the scale name of the 
 function
 ]]--
@@ -227,12 +330,11 @@ end
 
 --[[ This routine offsets the function by a given vector xo. ]]--
 function factory_:offset(xo)
-	assert(xo~=nil, 'Specify xo offset vector')
-	if self.dim > 1 then
-		self.fun = proto_multivariate.OffSet(self.fun, xo)
-	else
-		self.fun = proto_funs.OffSet(self.fun, xo)
-	end
+	local mt = getmetatable(self.fun)
+	
+	local myfun = mt.__call
+
+	mt.__call = function(_, x) return myfun(nil, x - xo) end
 end
 
 --[[ This routine computes the expected value of the function at a given point xo. ]]--
@@ -263,17 +365,18 @@ function factory_:abrupt_switching(fun, stepsize)
 	end
 end
 
---[[ This is a metamethod, which is defined in order to be possible to cal an object's instance as a function ]]--
+--[[ This is a metamethod, which is defined in order to be possible to call an object's instance as a function ]]--
 function factory_:__call(x)
 	if self.fun == nil then
 		self:restore()
 	end
+	self:non_stationarity()
 	return self.fun(x)
 end
 
 --[[ Resets the object ]]--
 function factory_:restore()
-	local instance = factories.factory({
+	local instance = optimbench.factory({
 		seed= self.seed,
 		name= self.name,
 		noisename= self.noisename,
@@ -394,5 +497,3 @@ function factory_:plot(arg)
 	end
 end
 
--- hack around class torch issue
-optimxBench.factory = optimx.factory

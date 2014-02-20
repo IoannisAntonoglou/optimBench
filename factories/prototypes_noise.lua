@@ -171,5 +171,5 @@ function noise.WrapNoise(noise_name, fun, spec)
 	return noise[noise_name](spec, fun)
 end
 
-optimBench.noise_prototypes = noise
+optimbench.noise_prototypes = noise
 

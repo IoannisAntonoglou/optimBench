@@ -127,4 +127,4 @@ function integral_wrappers.testIntegrals()
 
 end
 
-optimBench.noise_integration_prototypes = integral_wrappers
+optimbench.noise_integration_prototypes = integral_wrappers

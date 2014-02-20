@@ -753,4 +753,4 @@ function prototypes.OffSet(fun, xo)
 	return wfun
 end
 
-optimBench.function_prototypes = prototypes
+optimbench.function_prototypes = prototypes

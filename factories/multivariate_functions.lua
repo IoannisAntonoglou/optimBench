@@ -174,4 +174,4 @@ function multidimensional.OffSet(fun, vector)
 	return wfun
 end
 
-optimBench.multivariate_functions = multidimensional
+optimbench.multivariate_functions = multidimensional

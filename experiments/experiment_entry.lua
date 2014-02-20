@@ -13,7 +13,7 @@ local colours = {
 }
 
 
-local experiment = torch.class('optimBench.experiment_entry')
+local experiment = torch.class('optimbench.experiment_entry')
 
 --[[ This function produces a list of seeds for a random generator. The function is deterministic for reproducibility reasons ]]--
 local function seedGenerator(N)
@@ -189,5 +189,5 @@ function experiment:qualitativeAssess(initValue, bestValue)
 	end
 end
 
-optimx.benchmarking.experiment_entry = optimx.experiment_entry
-optimx.experiment_entry = nil
+--optimbench.benchmarking.experiment_entry = optimbench.experiment_entry
+--optimbench.experiment_entry = nil

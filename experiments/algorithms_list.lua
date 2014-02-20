@@ -75,7 +75,7 @@ local function generateAlgorithmsList()
 		local fun = algorithm.fun
 		algorithm.name = nil
 		algorithm.fun = nil
-		local algo=optimx.benchmarking.algo(name, fun, algorithm)
+		local algo=optimbench.algo(name, fun, algorithm)
 		algorithms_list[algo:hash()] = algo
 		algorithms_list[i] = nil
 	end
@@ -83,4 +83,4 @@ end
 
 generateAlgorithmsList()
 
-optimBench.algorithms_list = algorithms_list
+optimbench.algorithms_list = algorithms_list

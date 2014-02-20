@@ -2,16 +2,17 @@ package = 'optimbench'
 version = '0-0'
 
 source = {
-   url = 'git+file://git@github.com:projectconcept/optimx.git',
+   url = 'git@github.com:IoannisAntonoglou/optimBench.git',
    branch = 'master'
 }
 
 description = {
   summary = "A benchmark testbed for optimisation algorithms",
-  homepage = "git@github.com:projectconcept/optimx.git"
+  homepage = "git@github.com:projectconcept/optimBench.git"
 }
 
 dependencies = { 'torch >= 7.0', 'optim'}
+
 build = {
    type = "command",
    build_command = [[

@@ -4,11 +4,11 @@ for assessing the performance of an algorithm in a list of function prototypes
 require 'paths'
 require 'image'
 
-local algorithms_list = optimx.benchmarking.algorithms_list
-local functions_list = optimx.benchmarking.functions_list
+local algorithms_list = optimbench.algorithms_list
+local functions_list = optimbench.functions_list
 
 
-local experiments_db = torch.class('optimBench.experimentsDB')
+local experiments_db = torch.class('optimbench.experimentsDB')
 
 --[[ This is the object's constructor. It creates all the indexing tables which are necessary for retrieving and filtering the results in the database
 efficiently. 

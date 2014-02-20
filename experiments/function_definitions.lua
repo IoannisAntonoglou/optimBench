@@ -27,87 +27,94 @@ generation of any dimension functions. The name convention has the following tem
  * `rotationList` - A list that defines whether the multivariate function shall be rotated or not. 
 
  * `curlList` - A list that defines whether the gradient of the multivariate function shall be curled or not. 
-
+ 
+ * `nonStationarityList` - A list that defines whether there is non-stationarity in the function
 ]]--
 
 --[[ A table of function definitions based on the name convention described above
 ]]--
 local functions_name={
-	'{line|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_bowl|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{abs|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{bend|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{relu|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_bowl|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{cliff|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{ridge|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_nonconvex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_nonconvex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{line-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-gauss_convex-gauss_bowl-gauss_convex-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{laplace_nonconvex-laplace_convex-laplace_bowl-laplace_convex-laplace_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{line-quad_bowl-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-abs-quad_convex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-cliff-quad_convex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-cliff-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-quad_bowl-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-abs-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{cliff-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{cliff-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-cliff-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_bowl-cliff-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{relu-bend-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-relu-bend-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-relu-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_convex-relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{gauss_nonconvex-relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}',
-	'{quad_bowl|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{*|2|}_{L1norm}_{rotate,normal}_{normal}',
-	'{abs|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal,steep|1|normal|1|,normal|1|steep|1|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{quad_bowl|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{line|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}',
-	'{relu|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}',
-	'{exponential|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{abs|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{abs|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{cliff|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{cliff|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{cliff|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{exponential|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}',
-	'{gauss_nonconvex|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{saddle|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{gauss_nonconvex|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{saddle|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{laplace_convex-laplace_nonconvex-quad_convex|1|laplace_convex-laplace_nonconvex-quad_convex|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,saddle|1|normal|1|}_{L1norm}_{normal}_{normal}',
-	'{quad_bowl|10|}_{gauss*|10|}_{*|10|}_{L1norm}_{normal}_{normal}',
-	'{laplace_convex-laplace_nonconvex-quad_convex|10|}_{gauss_add*|10|}_{normal|10|,saddle|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{abs|1|quad_bowl|9|}_{gauss_add*|10|}_{normal,normal|1|saddle|9|,normal|1|steep|9|}_{L1norm}_{normal}_{normal}',
-	'{quad_bowl|1|line|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{line|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}',
-	'{relu|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}',
-	'{exponential|1|line|9|}_{gauss_add*|10|}_{normal|10|,steep|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{abs|1|line|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{abs|1|abs|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{cliff|1|abs|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{cliff|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal,curl}',
-	'{cliff|1|quad_bowl|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal}',
-	'{exponential|1|quad_bowl|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}',
-	'{gauss_nonconvex|1|abs|9|}_{gauss_add*|10|}_{saddle|1|normal|9|}_{L1norm}_{normal}_{normal}',
-	'{gauss_nonconvex|1|quad_bowl|9|}_{gauss_add*|10|}_{saddle|1|normal|9|}_{L1norm}_{normal}_{normal}'
+	-- 1 Dimensional Functions --
+	'{line|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_bowl|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{abs|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{bend|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{relu|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_bowl|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{cliff|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{ridge|1|}_{*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_nonconvex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_convex-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_nonconvex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_convex-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{line-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_convex-relu|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-gauss_convex-gauss_bowl-gauss_convex-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{laplace_nonconvex-laplace_convex-laplace_bowl-laplace_convex-laplace_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{line-quad_bowl-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-abs-quad_convex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-cliff-quad_convex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-cliff-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-quad_bowl-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-abs-gauss_nonconvex|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{cliff-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{cliff-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-cliff-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_bowl-cliff-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{relu-bend-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-relu-bend-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-relu-line|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-relu-bend-quad_bowl|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{quad_convex-relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+	'{gauss_nonconvex-relu-bend-exponential|1|}_{gauss_add*|1|}_{*|1|}_{None}_{normal}_{normal}_{normal,scale,noise,offset}',
+
+	-- 2 Dimensional Functions --
+	'{quad_bowl|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{*|2|}_{L1norm}_{rotate,normal}_{normal}_{normal}',
+	'{abs|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal,steep|1|normal|1|,normal|1|steep|1|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{quad_bowl|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{line|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{relu|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{exponential|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{abs|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{abs|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{cliff|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,steep|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{cliff|1|line|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{cliff|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{exponential|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{gauss_nonconvex|1|abs|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{saddle|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{gauss_nonconvex|1|quad_bowl|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{saddle|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{laplace_convex-laplace_nonconvex-quad_convex|1|laplace_convex-laplace_nonconvex-quad_convex|1|}_{gauss_add_normal|2|,gauss_add_low|1|gauss_add_high|1|,gauss_add_high|1|gauss_add_low|1|}_{normal|2|,saddle|1|normal|1|}_{L1norm}_{normal}_{normal}_{normal}',
+	
+	-- 10 Dimensional Functions -- 
+
+	'{quad_bowl|10|}_{gauss*|10|}_{*|10|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{laplace_convex-laplace_nonconvex-quad_convex|10|}_{gauss_add*|10|}_{normal|10|,saddle|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{abs|1|quad_bowl|9|}_{gauss_add*|10|}_{normal,normal|1|saddle|9|,normal|1|steep|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{quad_bowl|1|line|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{line|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{relu|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{exponential|1|line|9|}_{gauss_add*|10|}_{normal|10|,steep|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{abs|1|line|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{abs|1|abs|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{cliff|1|abs|9|}_{gauss_add*|10|}_{normal,steep|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{cliff|1|line|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal,curl}_{normal}',
+	'{cliff|1|quad_bowl|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal,rotate}_{normal}_{normal}',
+	'{exponential|1|quad_bowl|9|}_{gauss_add*|10|}_{normal|10|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{gauss_nonconvex|1|abs|9|}_{gauss_add*|10|}_{saddle|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}',
+	'{gauss_nonconvex|1|quad_bowl|9|}_{gauss_add*|10|}_{saddle|1|normal|9|}_{L1norm}_{normal}_{normal}_{normal}'
 }
 
 --[[ A list of possible noises ]]--
@@ -147,6 +154,13 @@ local rotations={
 local curls={
 	curl=true,
 	normal=false
+}
+
+local non_stationarity={
+	normal = {name='normal'},
+	scale = {name='scale', scale=0.1, steps=10},
+	noise = {name='noise', scale=0.5, steps=10},
+	offset = {name='offset', scale=0.1, steps=10}
 }
 
 --[[ Local function for pattern matching ]]--
@@ -236,16 +250,17 @@ local function functionVariantsFromName(name)
 		table.insert(parts, w)
 	end
 
-	local funname, noise, scale, norm, rotation, curl = unpack(parts)
+	local funname, noise, scale, norm, rotation, curl, non_stat = unpack(parts)
 
 	local noise_variants = processOption(noise, noises)
 	local scale_variants = processOption(scale, scales)
 	local norm_variants = processNormRotCurl(norm)
 	local rot_variants = processNormRotCurl(rotation)
 	local curl_variants = processNormRotCurl(curl)
+	local non_stat_variants = processNormRotCurl(non_stat)
 
 	local all_variants = { '{'..funname..'}'}
-	local options = {noise_variants, scale_variants, norm_variants, rot_variants, curl_variants}
+	local options = {noise_variants, scale_variants, norm_variants, rot_variants, curl_variants, non_stat_variants}
 
 	for _, opt in pairs(options) do
 		local new_all_variants = {}
@@ -435,7 +450,7 @@ local function generateFunctionFromName(name)
 		table.insert(parts, w)
 	end
 
-	local funs, noise, scale, norm, rotation, curl = unpack(parts)
+	local funs, noise, scale, norm, rotation, curl, non_stat= unpack(parts)
 	local funname = funs
 	local noisename = noise
 	local scalename = scale
@@ -443,15 +458,17 @@ local function generateFunctionFromName(name)
 	funs = processFunPerDimension(funs)
 	noise = processNoisePerDimension(noise)
 	scale = processScalePerDimension(scale)
+	non_stat = non_stationarity[non_stat]
 
-	local fun = optimx.benchmarking.factory({
+	local fun = optimbench.factory({
 		name=funname,
 		noisename=noisename,
 		scalename = scalename,
 		funs=funs,
 		noise=noise,
 		opt=scale,
-		norm=norm
+		norm=norm,
+		non_stat=non_stat
 		})
 	if rotations[rotation] then
 		fun:rotate()
@@ -467,8 +484,7 @@ local function generateFunctionFromName(name)
 end
 
 --[[ This function generates all the prototype functions defined in the table functions_name ]]--
-function generateMultidimensional()
-
+local function generateMultidimensional()
 	local functions = {}
 
 	for _, name in pairs(functions_name) do
@@ -482,8 +498,7 @@ function generateMultidimensional()
 		functions[fun] = generateFunctionFromName(fun)
 		i = i +1
 	end
-	
 	return functions
 end
 
-optimBench.functions_list = generateMultidimensional()
+optimbench.functions_list = generateMultidimensional()

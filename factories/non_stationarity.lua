@@ -103,4 +103,4 @@ function non_stationarity.testFunction(fun, speed)
 	gnuplot.plot(x, y)
 end
 
-optimBench.non_stationarity = non_stationarity
+optimbench.non_stationarity = non_stationarity

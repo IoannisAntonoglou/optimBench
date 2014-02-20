@@ -4,7 +4,7 @@
 require 'torch'
 require 'optim'
 
-local algo = torch.class('optimBench.algo')
+local algo = torch.class('optimbench.algo')
 
 --[[ This method is the constructor
 

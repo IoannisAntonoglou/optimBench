@@ -32,7 +32,7 @@ function experiments_db:__init(opt)
 	self.non_stat_indexing = {}
 	self.repetitions = opt.repetitions or 10
 	self.steps = opt.steps or 100
-	self.referenceFun = '{quad_bowl|1|}_{gauss_add_normal|1|}_{normal|1|}_{None}_{normal}_{normal}'
+	self.referenceFun = '{quad_bowl|1|}_{gauss_add_normal|1|}_{normal|1|}_{None}_{normal}_{normal}_{normal}'
 	if opt.referencePathFile then
 		if paths.filep(opt.referencePath) then
 			local f = torch.DiskFile(opt.referencePathFile, 'r'):binary()
@@ -267,7 +267,14 @@ function experiments_db:ComputeReferenceValues()
 	
 	assert(sgd_variants~=nil, 'No reference values computed !')
 
-	for kf, vf in pairs(functions_list) do
+	local available_functions = {}
+	for k, v in pairs(self.functions_indexing) do
+		for kk, vv in pairs(v) do
+			available_functions[kk] = functions_list[kk]
+		end
+	end
+
+	for kf, vf in pairs(available_functions) do
 		local fInit = vf:initValue()
 		local fbest = math.huge
 		local kbest = nil
@@ -346,7 +353,7 @@ function experiments_db:_nicePlot(funs, algos, blocks, data)
 	local xdim = data:size(2)
 	local ydim = data:size(3)
 
-	local zoom = 2
+	local zoom = 0
 
 	local xoffset = 100
 	local yoffset = 50
@@ -519,7 +526,6 @@ function experiments_db:plotExperiments(funs, algos)
 				for _, f in pairs(fun_blocks[fun]) do
 					local r, g, b
 					r, g, b = unpack(self.experiments[a][f].colour)
-
 					data[1][x][y] = r
 					data[2][x][y] = g
 					data[3][x][y] = b
@@ -745,7 +751,7 @@ function experiments_db:load(filename)
 				thisfmins = fmins[{{i}, {1, repet}}]:squeeze()
 			end
 
-			local exp = optimx.benchmarking.experiment_entry(algo, fun, self.repetitions, self.steps)
+			local exp = optimbench.experiment_entry(algo, fun, self.repetitions, self.steps)
 
 			exp.fmin = thisfmin
 			exp.xmin = thisxmin

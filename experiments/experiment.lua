@@ -353,7 +353,7 @@ function experiments_db:_nicePlot(funs, algos, blocks, data)
 	local xdim = data:size(2)
 	local ydim = data:size(3)
 
-	local zoom = 0
+	local zoom = 2
 
 	local xoffset = 100
 	local yoffset = 50
@@ -790,7 +790,7 @@ function experiments_db:addAlgorithm(algoname, algofun, opt)
 	for k, v in pairs(computeVariants(algoname, {options})) do
 		v.name = nil
 		v.fun = nil
-		local alg = optimx.benchmarking.algo(algoname, algofun, v)
+		local alg = optimbench.algo(algoname, algofun, v)
 		local alg_hash = alg:hash()
 		algorithms_list[alg_hash] = alg
 
@@ -798,7 +798,7 @@ function experiments_db:addAlgorithm(algoname, algofun, opt)
 		self.algorithms_indexing[algoname][alg_hash] = true
 
 		for kf, v in pairs(self.referenceExperiments) do
-			self.experiments[alg_hash][kf] = optimx.benchmarking.experiment_entry(alg, v.fun, self.repetitions, self.steps)
+			self.experiments[alg_hash][kf] = optimbench.experiment_entry(alg, v.fun, self.repetitions, self.steps)
 		end
 	end
 end

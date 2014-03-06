@@ -2,13 +2,13 @@ package = 'optimbench'
 version = '0-0'
 
 source = {
-   url = 'git@github.com:IoannisAntonoglou/optimBench.git',
+   url = 'git://github.com/IoannisAntonoglou/optimBench.git',
    branch = 'master'
 }
 
 description = {
   summary = "A benchmark testbed for optimisation algorithms",
-  homepage = "git@github.com:projectconcept/optimBench.git"
+  homepage = "https://github.com/IoannisAntonoglou/optimBench.git"
 }
 
 dependencies = { 'torch >= 7.0', 'optim'}

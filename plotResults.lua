@@ -20,11 +20,16 @@ end
 
 local DB = optimbench.experimentsDB()
 
-DB:load('theDB')
+DB:runExperiments()
 
 DB:ComputeReferenceValues()
 
 DB:assessPerformance()
+
+-- you can save the results by calling
+-- DB:save(filename)
+-- and you can reload them by calling
+-- DB:load(filename)
 
 local fun_blocks = {}
 

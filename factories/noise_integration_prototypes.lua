@@ -2,12 +2,11 @@
 ]]--
 
 require 'randomkit'
-package.path = package.path .. '/Users/ioannis/workspace/optimisation/optimx/benchmarking/utils/?.lua'
-require 'numintegr'
+require 'optimbench.numintegr'
 
 local integral_wrappers={}
 
---[[ This method computes the expected value of a noisy function at a point xo by using Monte Carlo integration. 
+--[[ This method computes the expected value of a noisy function at a point xo by using Monte Carlo integration.
 
 Parameters:
  * `fun` - the noisy function
@@ -27,7 +26,7 @@ function integral_wrappers.MonteCarlo(fun, xo, samples)
 	return fmean/samples
 end
 
---[[ This method computes the expected value of a noisy function at a point xo by using Monte Carlo integration. 
+--[[ This method computes the expected value of a noisy function at a point xo by using Monte Carlo integration.
 The difference of this function from the one above is that it uses a fixed random seed for reproducibility.
 
 Parameters:
@@ -79,12 +78,12 @@ function integral_wrappers.Numerical(fun, xo)
 		f, _ = fun.funnoise(xxo, n)
 		local pn = fun.pdf(n)
 		local res = f * pn
-		if res ~= res then 
+		if res ~= res then
 			return 0;
 		end
 		return res
 	end
-	
+
 	local integral = InfiniteIntegral(wfun)
 	if type(integral) == 'number' then
 		return integral
@@ -97,7 +96,7 @@ function integral_wrappers.testIntegrals()
 	local noise = require 'prototypes_noise'
 	local funs = require 'prototypes_functions'
 	local multivariate = require 'multivariate_functions'
-	
+
 	local fun = funs.FunctionGenerator({xs=-2, fs=2, fprime=-1, xe=4}, {'quad_bowl'}, {})
 
 	print('1D bowl with zero at 1 and additive gaussian and scale 0.1')
@@ -105,7 +104,7 @@ function integral_wrappers.testIntegrals()
 	print('Numerical integration', integral_wrappers.Numerical(fun_add, 1))
 	print('MC integration', integral_wrappers.MonteCarlo(fun_add, 1))
 	print('Analytic result', 0.5)
-	
+
 	print()
 
 	print('1D bowl with zero at 1 and multiplicative gaussian and scale 0.1')
